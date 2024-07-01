@@ -1,17 +1,16 @@
 import tkinter as tk
-#colores 
+#Colores 
 fondo_inicio="#FF3131"
 
 
-#ventana de inicio de session
+#Ventana de inicio de sesión
 def inicio_usuario():
 
     def salir():
         I_sesion.withdraw()
         ventana.deiconify()
 
-
-
+    
 
     ventana.withdraw()
     I_sesion = tk.Toplevel()  
@@ -24,13 +23,13 @@ def inicio_usuario():
     
     usuario=tk.StringVar
     contraseña=tk.StringVar
- #entrada de usuario y contraseña
+ #Entrada de usuario y contraseña
     entrada_usuario=tk.Entry(I_sesion,textvariable=usuario,width=22,relief="flat",bg="#D9D9D9")
     entrada_usuario.place(x=215,y=215)
     entrada_contraseña=tk.Entry(I_sesion,show="*",textvariable=contraseña,width=22,relief="flat",bg="#D9D9D9")
     entrada_contraseña.place(x=215,y=280)
 
-    #boton de entar y salir
+    #Botón de entrar y salir
     boton_entrar = tk.Button(I_sesion, text="ENTRAR", cursor="hand2", command=salir , bg="#004AAD", width=12, relief="flat",
                   font=("Open Sans", 13, "bold"))
     boton_entrar.place(x=65, y=390)
@@ -46,21 +45,19 @@ def inicio_usuario():
 
 
 
-
-
-# Crear la ventana del menu
+#Crear la ventana del menú
 ventana = tk.Tk()
-ventana.title("Menu")
+ventana.title("Menú")
 ventana.geometry("500x500+500+50")
 ventana.resizable(width=False, height=False)
 
-# Cargar la imagen de fondo del menu
+#Cargar la imagen de fondo del menú
 fondo = tk.PhotoImage(file="1.png")
 
 fondo1 = tk.Label(ventana, image=fondo)
 fondo1.place(x=0, y=0, relwidth=1, relheight=1)
 
-#botones del menu
+#Botones del menú
 
 boton_inicio = tk.Button(ventana, text="INICIO", cursor="hand2", command=inicio_usuario , bg=fondo_inicio, width=12, relief="flat",
                   font=("Open Sans", 13, "bold"))
