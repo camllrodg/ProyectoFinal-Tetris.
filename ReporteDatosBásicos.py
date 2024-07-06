@@ -1,9 +1,9 @@
-#reporte de los datos básicos del jugador.
+#Reporte de los datos básicos del jugador.
 
 #Lo primero q tenemos q hacer es leer el archivo binario "Juegos".
 
 def main():
-  archivoJuegos=open("JUEGOS", "rb")
+  archivoJuegos=open("JUEGOS.bin", "rb")
 
   #Supongamos que en el archivo juegos se encuentra en este orden los datos de la partida:
   #1) Código de juego
@@ -13,7 +13,7 @@ def main():
   linea=archivoJuegos.readline()  #Para leer línea por línea.
   lineaString=linea.decode("utf-8") #La convertimos a string
 
-  FuncReporte(linea)
+  FuncReporte(lineaString, archivoJuegos)
   
   archivoJuegos.close()
 
@@ -22,13 +22,13 @@ def main():
 def FuncReporte(lineaString, archivoJuegos):
   reporte=open("ReporteDatosBasicos", "w")  #Será un archivo txt.
 
-  reporte.write("                                             Jugadores                                                 \n")
-  reporte.write("Código de Juego                             Identificador                               Puntos ganados  \n")
-  reporte.write("*******                                        ******                                     *********           \n")
+  reporte.write("                                                                          Jugador                                                                            \n")
+  reporte.write("Código de Juego                        Identificador                            Puntos ganados                     Fecha                  Hora           \n")
+  reporte.write("*******                                     ******                                     *********                   ******                *******                   \n")
 
   while lineaString:  #Con ya tener la variable "linea" un valor, ya de por sí es True.
     listaDatos=lineaString.split("/") #para eliminar la barra. Los datos los colocará en una lista. MODIFICAR.
-    reporte.write(f"{listaDatos[0]}                      {listaDatos[1]}                               {listaDatos[4]}         ")
+    reporte.write(f"{listaDatos[0]}                     {listaDatos[1]}                              {listaDatos[2]}         ")
     lineaString=archivoJuegos.readline() #Inicializamos :).
 
   reporte.close()
