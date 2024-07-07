@@ -280,7 +280,7 @@ def entrada():
                         if (campos[4].decode('utf-8'))==codigoaux:
                             b_codigo=True
                             
-                        elif (campos[1].decode('utf-8'))==contrasenaaux:
+                        if (campos[1].decode('utf-8'))==contrasenaaux:
                             b_contrasena=True
                     if b_codigo and b_contrasena==True:
                         return Modos_juegos()
