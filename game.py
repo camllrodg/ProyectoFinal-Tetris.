@@ -1,29 +1,23 @@
+import pygame
 from grid import Grid
 from blocks import *
-from block import Block
+from colors import Colors
 import random
 
 #Cabeza del juego
 class Game:
-    def __init__(self):
-        self.grid=Grid()
+    def __init__(self,d):
+        self.grid=Grid(d)
         self.blocks=[block_1(),block_2(),block_3(),block_4(),block_5(),block_6(),block_7(),block_8(),block_9()]
         self.current_block=self.get_random_block()
         self.next_block=self.get_random_block()
         self.game_over=False
         self.score=0
-        #self.row=row
-        #elf.column=column
     
     #Puntaje
-    def update_score(self,lines_clear,move_down_points):
-        if lines_clear==1:
-            self.score+=100
-        elif lines_clear==2:
-            self.score+=300
-        elif lines_clear==3:
-            self.score+=500
-        self.score+=move_down_points
+    def update_score(self):
+        valor_celda=self.lock()
+        self.score+=(valor_celda)*100
 
     #Metodo para tomar una pieza random
     def get_random_block(self):
@@ -59,8 +53,7 @@ class Game:
             self.grid.grid[position.row][position.column]=self.current_block.id
         self.current_block=self.next_block
         self.next_block=self.get_random_block()
-        rows_clear=self.grid.delete_full_row()
-        self.update_score(rows_clear,0)
+        self.grid.delete_full_row()
         if self.block_fits()==False:
             self.game_over=True
     
@@ -94,15 +87,13 @@ class Game:
                 return False
         return True
 
+    
     #Metodo para dibujar las piezas
     def draw(self,screen):
         self.grid.draw(screen)
         self.current_block.draw(screen,11,11)
+       
+       
+    
 
-        #Centrar algunas piezas
-        if self.next_block.id==1:
-            self.next_block.draw(screen,255,290)
-        elif self.next_block.id==7:
-            self.next_block.draw(screen,255,280)
-        else:
-            self.next_block.draw(screen,270,270)
+       

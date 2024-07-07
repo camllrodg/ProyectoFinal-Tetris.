@@ -1,11 +1,12 @@
 import pygame
 from colors import Colors
+from block import *
 
 #Creacion de la malla
 class Grid:
-    def __init__(self):
-        self.num_rows=20
-        self.num_cols=10
+    def __init__(self,dimen):
+        self.num_rows=dimen
+        self.num_cols=dimen
         self.cell_size=30
         self.grid=[[0 for j in range(self.num_cols)] for i in range (self.num_rows)]
         self.colors=Colors.get_cells_colors()
@@ -47,24 +48,33 @@ class Grid:
         for column in range(self.num_cols):
             self.grid[row+num_rows][column]=self.grid[row][column]
             self.grid[row][column]=0
+    
+    #Guardar valor de las celdas
+    def valor_celdas(self):
+        valor=0
+        for row in range(self.num_rows-1,0,-1):
+            for column in range(self.num_cols):
+                if self.full_row(row):
+                    valor+=self.grid[row][column]
+        return valor
 
     #Eliminar fila llena
     def delete_full_row(self):
-        complet=0
+        full=0
         for row in range(self.num_rows-1,0,-1):
-            if self.full_row(row):
-                self.delete_row(row)
-                complet+=1
-            elif complet>0:
-                self.move_row(row,complet)
-        return complet
+                if self.full_row(row):
+                    self.delete_row(row)
+                    full+=1
+                elif full>0:
+                    self.move_row(row,full)
+        return full
     
     #Restablecer juego
     def reset(self):
         for row in range(self.num_rows):
             for column in range(self.num_cols):
                 self.grid[row][column]=0            
-
+    
     #Dibujar las piezas
     def draw(self,screen):
         for row in range(self.num_rows):
@@ -72,3 +82,6 @@ class Grid:
                 cell_value=self.grid[row][column]
                 cell_rect=pygame.Rect(column*self.cell_size +11,row*self.cell_size +11,self.cell_size -1,self.cell_size -1) #Creacion de las celdas
                 pygame.draw.rect(screen,self.colors[cell_value],cell_rect) #Dibujar las celdas
+        
+
+        

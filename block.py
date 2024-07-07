@@ -39,17 +39,29 @@ class Block:
         if self.rotation_state==0:
             self.rotation_state=len(self.cells)-1
 
+    
     #Dibujar las piezas en la malla
+    def draw(self, screen, offset_x, offset_y):
+        tiles = self.get_cells_position()
+        for tile in tiles:
+            if 0 <= tile.column * self.cell_size <= screen.get_width() and 0 <= tile.row * self.cell_size <= screen.get_height():
+                f = pygame.font.SysFont("Impact", 20)
+                cell = f.render(str(self.id), True, Colors.white)
+                tile_rect = pygame.Rect(offset_x + tile.column * self.cell_size, offset_y + tile.row * self.cell_size, self.cell_size - 1, self.cell_size - 1)
+                pygame.draw.rect(screen, self.colors[self.id], tile_rect)
+                screen.blit(cell, cell.get_rect(centerx=tile_rect.centerx, centery=tile_rect.centery))
+
+
+
+
+
+    """
     def draw(self, screen, offset_x,offset_y):
         tiles=self.get_cells_position() #Esta línea recupera la lista de las posiciones para la rotación actual de las piezas.
         for tile in tiles:
+            f=pygame.font.SysFont("Impact",20)
+            cell=f.render(str(self.id),True,Colors.white)
             tile_rect=pygame.Rect(offset_x+tile.column * self.cell_size,offset_y+tile.row * self.cell_size,self.cell_size -1, self.cell_size -1)
             pygame.draw.rect(screen, self.colors[self.id], tile_rect) #El valor del color de la celda es obtenida de la lista de colores
-
-"""        
-#Posiciones para cada pieza  
-class Position:
-    def __init__(self, row, column):
-        self.row=row
-        self.column=column
-"""
+            screen.blit(cell,cell.get_rect(centerx=tile_rect.centerx, centery=tile_rect.centery))
+    """
