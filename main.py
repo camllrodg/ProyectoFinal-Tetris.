@@ -15,6 +15,9 @@ while flag:
     else:
         print("Ingrese una dimension valida")
 
+codigo_juego=000 #Codigo del juego
+time=datetime.now() #Fecha actual
+
 #Generar las frases de los ODS
 def random_frase():
         frases=["El fin de la pobreza es nuestro desafío","¡No desperdiciemos la comida!","El ejercicio es la clave para la salud física","El conocimiento es poder."
@@ -29,6 +32,15 @@ def random_frase():
         frase=random.choice(frases)
         frases.remove(frase)
         return frase
+
+#Registro de las jugadas
+def registro(codigo,iden,score):
+    fecha=f"{time.day}-{time.month}-{time.year}"
+    hora=f"{time.hour}:{time.minute}"
+    f=open("JUEGOS.bin","ab")
+    cad=f"{codigo}/{iden}/{score}/{fecha}/{hora}\n"
+    f.write(cad.encode())
+    f.close()
 
 #Inicio del juego
 pygame.init()
@@ -66,6 +78,8 @@ while flag:
             sys.exit() #Cerrar el programa
         if event.type==pygame.KEYDOWN:
             if game.game_over==True:
+                codigo_juego+=1
+                registro(codigo_juego,50,game.score)
                 game.game_over=False
                 game.reset()
             if event.key==pygame.K_LEFT and game.game_over==False:
