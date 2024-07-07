@@ -23,12 +23,12 @@ def FuncReporte(lineaString, archivoJuegos):
   reporte=open("ReporteDatosBasicos", "w")  #Será un archivo txt.
 
   reporte.write("                                                                          Jugador                                                                            \n")
-  reporte.write("Código de Juego                        Identificador                            Puntos ganados                     Fecha                  Hora           \n")
-  reporte.write("*******                                     ******                                     *********                   ******                *******                   \n")
+  reporte.write("Código de Juego                      Identificador                          Puntos ganados                   Fecha                  Hora           \n")
+  reporte.write("  *******                               ******                                 *********                     ******                *******                   \n")
 
   while lineaString:  #Con ya tener la variable "linea" un valor, ya de por sí es True.
     listaDatos=lineaString.split("/") #para eliminar la barra. Los datos los colocará en una lista. MODIFICAR.
-    reporte.write(f"{listaDatos[0]}                     {listaDatos[1]}                              {listaDatos[2]}         ")
+    reporte.write(f"             {listaDatos[0]}                         {listaDatos[1]}                                            {listaDatos[2]}                              {listaDatos[3]}                         {listaDatos[4]}")
     lineaString=archivoJuegos.readline() #Inicializamos :).
 
   reporte.close()
