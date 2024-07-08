@@ -16,8 +16,11 @@ class Game:
     
     #Puntaje
     def update_score(self):
-        valor_celda=self.lock()
-        self.score+=(valor_celda)*100
+        valores=0
+        i,valor=self.grid.delete_full_row()
+        for i in range(len(valor)):
+            valores+=valor[i]
+        self.score+=(valores)*100
 
     #Metodo para tomar una pieza random
     def get_random_block(self):

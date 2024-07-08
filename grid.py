@@ -48,27 +48,21 @@ class Grid:
         for column in range(self.num_cols):
             self.grid[row+num_rows][column]=self.grid[row][column]
             self.grid[row][column]=0
-    
-    #Guardar valor de las celdas
-    def valor_celdas(self):
-        valor=0
-        for row in range(self.num_rows-1,0,-1):
-            for column in range(self.num_cols):
-                if self.full_row(row):
-                    valor+=self.grid[row][column]
-        return valor
 
     #Eliminar fila llena
     def delete_full_row(self):
-        full=0
-        for row in range(self.num_rows-1,0,-1):
-                if self.full_row(row):
-                    self.delete_row(row)
-                    full+=1
-                elif full>0:
-                    self.move_row(row,full)
-        return full
-    
+        full = 0
+        valores=[]
+        for row in range(self.num_rows-1, 0, -1):
+            if self.full_row(row):
+                for column in range(self.num_cols):
+                    valores.append(self.grid[row][column])
+                self.delete_row(row)
+                full += 1
+            elif full > 0:
+                self.move_row(row, full)
+        return full, valores
+
     #Restablecer juego
     def reset(self):
         for row in range(self.num_rows):

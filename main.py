@@ -20,14 +20,14 @@ time=datetime.now() #Fecha actual
 
 #Generar las frases de los ODS
 def random_frase():
-        frases=["El fin de la pobreza es nuestro desafío","¡No desperdiciemos la comida!","El ejercicio es la clave para la salud física","El conocimiento es poder."
-        "La igualdad de género es libertad.","Agua limpia para todos","La energía solar ilumina el camino.","Elige un trabajo que te guste","La mejor manera de predecir el futuro es inventándolo.",
-        "No importa de dónde venimos, si no a dónde vamos.","¡Mantén limpia a tu ciudad!","Compra menos, elige bien, hazlo durar.","El clima está cambiando.","El agua pertenece al océano, la botella no.","¡Cuida el medio ambiente!", 
+        frases=["Fin de la pobreza","¡No desperdiciemos la comida!","El ejercicio es clave para la salud","El conocimiento es poder.",
+        "La igualdad de género es libertad.","Agua limpia para todos","La energía solar ilumina el camino.","Elige un trabajo que te guste","El futuro se predice inventándolo.",
+        "No importa de dónde venimos.","¡Mantén limpia a tu ciudad!","Elige bien, hazlo durar.","El clima está cambiando.","La botella no pertenece al océano.","¡Cuida el medio ambiente!", 
         "Sin justicia solo hay divisiones","Juntos creamos el cambio:)"]
         if len(frases)==0: #Si ya se mostraron todas las piezas
-            frases=["El fin de la pobreza es nuestro desafío","¡No desperdiciemos la comida!","El ejercicio es la clave para la salud física","El conocimiento es poder."
-        "La igualdad de género es libertad.","Agua limpia para todos","La energía solar ilumina el camino.","Elige un trabajo que te guste","La mejor manera de predecir el futuro es inventándolo.",
-        "No importa de dónde venimos, si no a dónde vamos.","¡Mantén limpia a tu ciudad!","Compra menos, elige bien, hazlo durar.","El clima está cambiando.","El agua pertenece al océano, la botella no.","¡Cuida el medio ambiente!", 
+            frases=["Fin de la pobreza","¡No desperdiciemos la comida!","El ejercicio es clave para la salud","El conocimiento es poder.",
+        "La igualdad de género es libertad.","Agua limpia para todos","La energía solar ilumina el camino.","Elige un trabajo que te guste","El futuro se predice inventándolo.",
+        "No importa de dónde venimos.","¡Mantén limpia a tu ciudad!","Elige bien, hazlo durar.","El clima está cambiando.","La botella no pertenece al océano.","¡Cuida el medio ambiente!", 
         "Sin justicia solo hay divisiones","Juntos creamos el cambio:)"]
         frase=random.choice(frases)
         frases.remove(frase)
@@ -45,10 +45,12 @@ def registro(codigo,iden,score):
 #Inicio del juego
 pygame.init()
 
+tiempo=60
+
 #Fuente del titulo y dibujar el texto en pantalla
-def texto(texto,x,y):
+def dibujar_texto(texto,color,x,y):
         fuente=pygame.font.SysFont("Impact",30)
-        text=fuente.render(texto,True,Colors.white)
+        text=fuente.render(texto,True,color)
         screen.blit(text,(x,y))
 
 #Recuadros para mostrar el puntaje y la pieza siguiente
@@ -56,7 +58,7 @@ score_rect=pygame.Rect(520,80,170,60)
 ods_rect=pygame.Rect(510,215,200,160)
 
 #Crear pantalla del juego
-screen=pygame.display.set_mode((750,500))
+screen=pygame.display.set_mode((950,550))
 
 #Titulo de la pantalla
 pygame.display.set_caption("Epic Tetris")
@@ -70,8 +72,9 @@ game=Game(n)
 GAME_UPDATE=pygame.USEREVENT
 pygame.time.set_timer(GAME_UPDATE,200) #Crea un temporizador que dispara GAME_UPDATE cada 200miliseg.
 
-flag=True
-while flag:
+frase=random_frase()
+ultima_frase=pygame.time.get_ticks()
+while True:
     for event in pygame.event.get(): #Verificar que el evento del ciclo actual no sea salir
         if event.type==pygame.QUIT: #Salir del juego
             pygame.quit()
@@ -92,18 +95,23 @@ while flag:
                 game.rotate()
         if event.type==GAME_UPDATE and game.game_over==False : #La posicion se actualiza solo cuando se dispara
             game.move_down() 
-        
-    frase=random_frase()
+    tiempo_act=pygame.time.get_ticks()
+    if tiempo_act-ultima_frase>=3000:  # 30 segundos
+        frase=random_frase()
+        ultima_frase=tiempo_act
     
     #Dibujar la pantalla
     screen.fill(Colors.d)
-    texto("Puntaje",550,20)
+    dibujar_texto("Puntaje",Colors.white,550,20)
     f=pygame.font.SysFont("Impact",30)
     score_value=f.render(str(game.score),True,Colors.white)
-    texto(frase,550,180)   
+    dibujar_texto("Jose",Colors.white,770,20)
+    dibujar_texto("jicandurin",Colors.white,740,60)
+    dibujar_texto("Bolivar",Colors.white,760,100)
+    dibujar_texto(frase,Colors.white,480,400)   
 
     if game.game_over==True:
-        texto("GAME OVER",520,400)    
+        dibujar_texto("GAME OVER",Colors.red,600,480)    
     
     pygame.draw.rect(screen,Colors.light_blue,score_rect,0,10) #Dibujar recuadro
     screen.blit(score_value,score_value.get_rect(centerx=score_rect.centerx, centery=score_rect.centery))   
