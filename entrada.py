@@ -235,13 +235,40 @@ def entrada():
             fondo = tk.PhotoImage(file="modos.png")
             fondo1 = tk.Label(modos, image=fondo)
             fondo1.place(x=0, y=0, relheight=1, relwidth=1)
+            #Funciones de inicializacion dependiendo del modo:
+            def enviar_modo(seleccion):
+                
+                modosaux= tk.Tk()
+                modosaux.geometry("250x100+500+50")
+                modosaux.resizable(width=False, height=False)
+                if seleccion==1:
+                    moves=tk.IntVar()
+                    mensaje=tk.Label(modosaux, text="Cantidad de movimientos:")
+                    mensaje.pack()
+                    casillamoves=tk.Entry(modosaux,bg="#dcdcdc",textvariable=moves)
+                    casillamoves.place(x=50,y=35)
+                    ingresar = tk.Button(modosaux, text="Ingresar", activebackground="#F50743", command=lambda:[modosaux.destroy(),ventana.destroy(),selec_piezas()])
+                    ingresar.place(x=90,y=60)
+                    modosaux.mainloop()
+                else:
+                    tiempo=tk.IntVar()
+                    mensaje=tk.Label(modosaux, text="Cantidad de tiempo(en minutos):")
+                    mensaje.pack()
+                    casillatiempo=tk.Entry(modosaux,bg="#dcdcdc",textvariable=tiempo)
+                    casillatiempo.place(x=50,y=35)
+                    ingresar = tk.Button(modosaux, text="Ingresar", activebackground="#F50743", command=lambda:[modosaux.destroy(),ventana.destroy()])
+                    ingresar.place(x=90,y=60)
+                    modosaux.mainloop()
+            
+            
+                
             #botones de eleccion de modo
-            boton_movimiento = tk.Button(modos, text="Por Movimiento",command="", cursor="hand2", bg="#004AAD", width=12, relief="flat",
+            boton_movimiento = tk.Button(modos, text="Por Movimiento",command=lambda:[enviar_modo(1)], cursor="hand2", bg="#004AAD", width=12, relief="flat",
                         font=("Open Sans", 14, "bold"))
             boton_movimiento.place(x=70, y=380)
 
 
-            boton_tiempo = tk.Button(modos,text="Por Tiempo",command="" , cursor="hand2", bg="#004AAD",width=12,relief="flat",
+            boton_tiempo = tk.Button(modos,text="Por Tiempo",command=lambda:[enviar_modo(0)] , cursor="hand2", bg="#004AAD",width=12,relief="flat",
                         font=("Open Sans",14,"bold"))
             boton_tiempo.place(x=280,y=380)
             
@@ -282,6 +309,7 @@ def entrada():
                             
                         if (campos[1].decode('utf-8'))==contrasenaaux:
                             b_contrasena=True
+                            
                     if b_codigo and b_contrasena==True:
                         return Modos_juegos()
                     else:
