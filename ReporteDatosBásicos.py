@@ -3,10 +3,6 @@
 #Lo primero q tenemos q hacer es leer el archivo binario "Juegos".
 
 def main():
-    
-  opcion=input("¿Desea buscar los datos de algún jugador? (si/no): ")
-  if opcion=="si":
-      iden=input("Ingrese el identificador del usuario que desea buscar: ")
 
   archivoJuegos=open("JUEGOS.bin", "rb")
 
@@ -31,6 +27,7 @@ def FuncReporte(lineaString, archivoJuegos):
   reporte.write("Código de Juego                            Puntos ganados                    Fecha                      Hora           \n")
   reporte.write("  *******                                    *********                       ******                    *******                   \n")
   
+  listaDatos=lineaString.split("/")
   while lineaString:  #Con ya tener la variable "linea" un valor, ya de por sí es True.
     listaDatos=lineaString.split("/") #para eliminar la barra. Los datos los colocará en una lista.
     reporte.write(f"             {listaDatos[0]}                         {listaDatos[2]}                                                              {listaDatos[3]}                          {listaDatos[4]}")
