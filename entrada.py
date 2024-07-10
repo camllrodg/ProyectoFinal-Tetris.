@@ -295,13 +295,66 @@ def entrada():
             modos.mainloop()  
         #ventana de seleccion de seleccion de piezas
         def selec_piezas():
+            #Dimensiones y creacion de ventana
             vpiezas = tk.Tk()  
             vpiezas.title("Selección de piezas")
             vpiezas.geometry("500x500+500+50")
             vpiezas.resizable(width=False, height=False)
             fondo = tk.PhotoImage(file="piezas.png")
-            fondo1 = tk.Label(modos, image=fondo)
+            fondo1 = tk.Label(vpiezas, image=fondo)
             fondo1.place(x=0, y=0, relheight=1, relwidth=1)
+            
+            #Funcion de busqueda, almacenamiento y envío de piezas
+            def enviar_piezas():
+                nonlocal conta, piezaaux, piezas_seleccionadas
+                pieza=piezaaux.get()
+                blocks=[1,2,3,4,5,6,7,8,9]
+                piezas=["Pieza 1", "Pieza 2", "Pieza 3", "Pieza 4", "Pieza 5","Pieza 6","Pieza 7","Pieza 8","Pieza 9"]
+                encontrado=False
+                if pieza=="":
+                    text1=tk.Label(text="Ingrese una pieza",font=("Open Sans",9,"bold"),fg="#F50743",bg="#FFFFFF")
+                    text1.place(x=100,y=335)
+                    vpiezas.after(3000,lambda:[text1.destroy()])
+                    return 
+                if conta <=4:
+                    for i in  range(len(piezas)):
+                        if piezas[i]==pieza:
+                            aux=i
+                            for j in range(len(piezas_seleccionadas)):
+                                if blocks[i]==piezas_seleccionadas[j]:
+                                    encontrado=True
+                                    text1=tk.Label(text="Pieza ya ingresada",font=("Open Sans",9,"bold"),fg="#F50743",bg="#FFFFFF")
+                                    text1.place(x=100,y=335)
+                                    vpiezas.after(3000,lambda:[text1.destroy()])
+                                    return 
+                    conta+=1
+                    return piezas_seleccionadas.append(blocks[aux]),conta, mostrar_seleccion()
+                else:
+                    text=tk.Label(text="Iniciando...",font=("Open Sans",14,"bold"))
+                    text.place(x=300,y=450)
+                    return piezas_seleccionadas,vpiezas.destroy()
+            def mostrar_seleccion():
+                nonlocal piezas_seleccionadas
+                cadenapiezas=""
+                indicar_piezas= tk.Label(text="Piezas seleccionadas:",font=("Open Sans",10,"bold"),bg="#FFFFFF")
+                indicar_piezas.place(x=300,y=330)
+                for i in range (len(piezas_seleccionadas)):
+                    cadenapiezas+="Pieza "+ str(piezas_seleccionadas[i])
+                    cadenapiezas+="\n"
+                mensajepiezas=tk.Label(text=cadenapiezas,bg="#FFFFFF")
+                mensajepiezas.place(x=300,y=360)
+            #Creacion de botones
+            piezaaux= tk.StringVar()
+            piezas_seleccionadas= []
+            conta=0
+            seleccion_pieza=ttk.Combobox(vpiezas,state="readonly",textvariable= piezaaux)
+            seleccion_pieza['values']= ("Pieza 1", "Pieza 2", "Pieza 3", "Pieza 4", "Pieza 5",
+            "Pieza 6","Pieza 7","Pieza 8","Pieza 9")
+            añadir= tk.Button(text="Añadir",command=lambda:[enviar_piezas()], bg="#F50743",width=8,font=("Open Sans", 14, "bold"))
+            
+            seleccion_pieza.place(x=100,y=360)
+            añadir.place(x=130,y=400)
+            vpiezas.mainloop()
         #ventana de inicio de sesion
         def inicio_usuario():
 
@@ -409,5 +462,3 @@ def entrada():
                         font=("Open Sans",14,"bold"))
         boton_registro.place(x=295,y=355)
         ventana.mainloop()
-    login()
-entrada()
