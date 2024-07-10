@@ -11,10 +11,17 @@ from blocks import *
 flag=True
 while flag:
     n=int(input("Ingrese la dimension del tablero (12/15)): " ))
-    modo=input("Ingrese una opcion: ")
+    modo=input("Ingrese una modo de juego (tiempo/movimiento): ")
+    if modo=="tiempo":
+        tiempo=int(input("Ingrese los segundos de juego: "))
+        aux_tiempo=tiempo
     if modo=="movimiento":
         movimientos=int(input("Ingrese la cantidad de movimientos: "))
-    if n==12 or n==15:
+        aux_movimientos=movimientos
+    usuario=input("Ingrese su usuario: ")
+    name=input("Ingrese su nombre: ")
+    edo=input("Ingrese su estado: ")
+    if n==12 or n==15 or n==9:
         flag=False
     else:
         print("Ingrese una dimension valida")
@@ -22,8 +29,6 @@ while flag:
 codigo_juego=000 #Codigo del juego
 time=datetime.now() #Fecha actual
 
-#Variables de control para los modos de juego
-tiempo=60
 
 #Inicio del juego
 pygame.init()
@@ -138,7 +143,7 @@ while True:
                 ult_tiempo=tiempo_act
             if tiempo==0:
                 game.game_over=True
-                tiempo=60
+                tiempo=aux_tiempo
             game.move_down(piezas_act)
 
         elif event.type==GAME_UPDATE and game.game_over==False and modo=="movimiento":
@@ -149,14 +154,14 @@ while True:
                 ult_tiempo=tiempo_act
             if game.game_over:
                 game.game_over=False
-                movimientos=int(input("Ingrese la cantidad de movimientos: "))
+                movimientos=aux_movimientos
                 game.move_dowm(piezas_act,movimientos)
 
     if game.game_over and modo=="tiempo":
-        tiempo=60
+        tiempo=aux_tiempo
 
     if game.game_over and modo=="movimiento":
-        movimientos=20
+        movimientos=aux_movimientos
 
     tiempo_act=pygame.time.get_ticks()
     if tiempo_act-ultima_frase>=3000:  # 30 segundos
@@ -166,13 +171,13 @@ while True:
     #Dibujar la pantalla
     screen.fill(Colors.d)
 
-    #Dibujar cada una de los items de la pantalla
+    #Dibujar cada uno de los items de la pantalla
     font=pygame.font.SysFont("Impact",30)
-    dibujar_texto("Puntaje",Colors.white,555,20)
+    dibujar_texto(name,Colors.white,750,20)
     score_value=font.render(str(game.score),True,Colors.white)
-    dibujar_texto("Jose",Colors.white,770,20)
-    dibujar_texto("jicandurin",Colors.white,740,60)
-    dibujar_texto("Bolivar",Colors.white,760,100)
+    dibujar_texto("Puntaje",Colors.white,560,20)
+    dibujar_texto(usuario,Colors.white,740,60)
+    dibujar_texto(edo,Colors.white,760,100)
     dibujar_texto(frase,Colors.white,480,400)  
     dibujar_texto("Siguiente",Colors.white,750,180)
 
@@ -199,5 +204,13 @@ while True:
     game.draw(screen)
 
     pygame.display.update() #Actualiza los cambios en los objetos del juego e imprime una imagen de ellos
-    clock.tick(60) #Numero de frames por segundo
- 
+    clock.tick(45) #Numero de frames por segundo
+
+
+
+
+
+
+
+
+    

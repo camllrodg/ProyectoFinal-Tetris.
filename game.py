@@ -122,5 +122,7 @@ class Game:
             self.next_block.draw(screen,680,250)
        
     
+       
+    
 
        
