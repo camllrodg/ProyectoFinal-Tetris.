@@ -215,20 +215,20 @@ def entrada():
 
         
         ingresar = tk.Button(raiz, text="Ingresar", bg="#F50743",width=8, command=lambda:[subir_registro()],font=("Open Sans", 14, "bold"))
-        #tk.Button(ventana, text="INICIO", cursor="hand2", command=inicio_usuario , bg=fondo_inicio, width=10, relief="flat",
-         #               font=("Open Sans", 14, "bold"))
         ingresar.place(x=235, y=430)
         regresar = tk.Button(raiz, text="Regresar", bg="#38b6ff", width=8, command=lambda:[raiz.destroy(),login()],font=("Open Sans", 14, "bold"))
         regresar.place(x=58, y=430)
         #BUCLE DE ACTUALIZACIÓN
         raiz.mainloop()
-
+    
     def login():
         fondo_inicio="#FF3131"
+        
         def Modos_juegos():
+            
             # configuracion de la pantalla
-            ventana.withdraw()
-            modos = tk.Toplevel()  
+            ventana.destroy()
+            modos = tk.Tk()  
             modos.title("Modos de Juego")
             modos.geometry("500x500+500+50")
             modos.resizable(width=False, height=False)
@@ -236,30 +236,48 @@ def entrada():
             fondo1 = tk.Label(modos, image=fondo)
             fondo1.place(x=0, y=0, relheight=1, relwidth=1)
             #Funciones de inicializacion dependiendo del modo:
-            def enviar_modo(seleccion):
-                
-                modosaux= tk.Tk()
-                modosaux.geometry("250x100+500+50")
-                modosaux.resizable(width=False, height=False)
-                if seleccion==1:
-                    moves=tk.IntVar()
-                    mensaje=tk.Label(modosaux, text="Cantidad de movimientos:")
-                    mensaje.pack()
-                    casillamoves=tk.Entry(modosaux,bg="#dcdcdc",textvariable=moves)
-                    casillamoves.place(x=50,y=35)
-                    ingresar = tk.Button(modosaux, text="Ingresar", activebackground="#F50743", command=lambda:[modosaux.destroy(),ventana.destroy(),selec_piezas()])
-                    ingresar.place(x=90,y=60)
-                    modosaux.mainloop()
-                else:
-                    tiempo=tk.IntVar()
-                    mensaje=tk.Label(modosaux, text="Cantidad de tiempo(en minutos):")
-                    mensaje.pack()
-                    casillatiempo=tk.Entry(modosaux,bg="#dcdcdc",textvariable=tiempo)
-                    casillatiempo.place(x=50,y=35)
-                    ingresar = tk.Button(modosaux, text="Ingresar", activebackground="#F50743", command=lambda:[modosaux.destroy(),ventana.destroy()])
-                    ingresar.place(x=90,y=60)
-                    modosaux.mainloop()
             
+            def enviar_modo(seleccion):
+                moves = tk.IntVar()
+                tiempo = tk.IntVar()
+
+                def verificar_seleccion():
+                    nonlocal seleccion,tiempo,moves
+                    if seleccion == 0:
+                        if tiempo.get() > 0:
+                            tiempodef = tiempo.get()
+                            return modos.destroy(), selec_piezas(), tiempodef
+                        else:
+                            casillatiempo.configure(bg="#F50743")
+                            modos.after(5000,lambda:[casillatiempo.configure(bg="#D9D9D9")])
+                    else:
+                        if moves.get() > 0:
+                            movesdef = moves.get()
+                            return modos.destroy(), selec_piezas(), movesdef
+                        else:
+                            casillamoves.configure(bg="#F50743")
+                            modos.after(5000,lambda:[casillamoves.configure(bg="#D9D9D9")])
+                if seleccion == 1:
+                    fondomoves=tk.PhotoImage(file="cant_movimientos.png")
+                    fondomoves1=tk.Label(modos,image=fondomoves)
+                    fondomoves1.place(x=0, y=0, relheight=1, relwidth=1)
+                    casillamoves = tk.Entry(modos, bg="#dcdcdc", font=("Open Sans", 14, "bold"),textvariable=moves, width=16)
+                    casillamoves.place(x=160, y=280)
+                    ingresar = tk.Button(modos, text="Ingresar", cursor="hand2", command=verificar_seleccion, bg=fondo_inicio, width=10, relief="flat",
+                        font=("Open Sans", 14, "bold"))
+                    ingresar.place(x=175, y=390)
+                    modos.mainloop()
+                else:
+                    fondotiempo=tk.PhotoImage(file="cant_tiempo.png")
+                    fondotiempo1=tk.Label(modos,image=fondotiempo)
+                    fondotiempo1.place(x=0, y=0, relheight=1, relwidth=1)
+                    casillatiempo = tk.Entry(modos, bg="#dcdcdc", font=("Open Sans", 14, "bold"),textvariable=tiempo, width=16)
+                    casillatiempo.place(x=160, y=280)
+                    ingresar = tk.Button(modos, text="Ingresar", cursor="hand2", command=verificar_seleccion, bg=fondo_inicio, width=10, relief="flat",
+                        font=("Open Sans", 14, "bold"))
+                    #ingresar = tk.Button(modos, text="Ingresar", activebackground="#F50743", command=lambda:[verificar_seleccion(tiempo)])
+                    ingresar.place(x=175, y=390)
+                    modos.mainloop()
             
                 
             #botones de eleccion de modo
@@ -275,7 +293,16 @@ def entrada():
 
 
             modos.mainloop()  
-        #ventana de inicio de session
+        #ventana de seleccion de seleccion de piezas
+        def selec_piezas():
+            vpiezas = tk.Tk()  
+            vpiezas.title("Selección de piezas")
+            vpiezas.geometry("500x500+500+50")
+            vpiezas.resizable(width=False, height=False)
+            fondo = tk.PhotoImage(file="piezas.png")
+            fondo1 = tk.Label(modos, image=fondo)
+            fondo1.place(x=0, y=0, relheight=1, relwidth=1)
+        #ventana de inicio de sesion
         def inicio_usuario():
 
             def salir():
