@@ -2,6 +2,7 @@ import pygame
 import sys
 import random
 import time
+from time import sleep
 from game import Game
 from colors import Colors
 from datetime import datetime
@@ -10,6 +11,9 @@ from datetime import datetime
 flag=True
 while flag:
     n=int(input("Ingrese la dimension del tablero (12/15)): " ))
+    modo=input("Ingrese una opcion: ")
+    if modo=="movimiento":
+        movimientos=int(input("Ingrese la cantidad de movimientos: "))
     if n==12 or n==15:
         flag=False
     else:
@@ -19,12 +23,10 @@ codigo_juego=000 #Codigo del juego
 time=datetime.now() #Fecha actual
 
 #Variables de control para los modos de juego
-time=60
-movimientos=0
+tiempo=60
 
 #Inicio del juego
 pygame.init()
-
 
 #Generar las frases de los ODS
 def random_frase():
@@ -85,21 +87,56 @@ while True:
             pygame.quit()
             sys.exit() #Cerrar el programa
         if event.type==pygame.KEYDOWN:
-            if game.game_over==True:
-                codigo_juego+=1
-                registro(codigo_juego,50,game.score)
-                game.game_over=False
-                game.reset()
-            if event.key==pygame.K_LEFT and game.game_over==False:
-                game.move_left()
-            if event.key==pygame.K_RIGHT and game.game_over==False:
-                game.move_right()
-            if event.key==pygame.K_DOWN and game.game_over==False:
-                game.move_down()
-            if event.key==pygame.K_UP and game.game_over==False:
-                game.rotate()
-        if event.type==GAME_UPDATE and game.game_over==False : #La posicion se actualiza solo cuando se dispara
-            game.move_down() 
+
+            #Modo de tiempo
+            if modo=="tiempo":
+                if game.game_over:
+                    codigo_juego+=1
+                    registro(codigo_juego,50,game.score)
+                    game.game_over=False
+                    game.reset()
+                if event.key==pygame.K_LEFT and game.game_over==False:
+                    game.move_left()
+                if event.key==pygame.K_RIGHT and game.game_over==False:
+                    game.move_right()
+                if event.key==pygame.K_DOWN and game.game_over==False:
+                    game.move_down()
+                if event.key==pygame.K_UP and game.game_over==False:
+                    game.rotate()
+
+            #Modo de Juegos
+            if modo=="movimiento":
+                if game.game_over:
+                    codigo_juego+=1
+                    registro(codigo_juego,50,game.score)
+                    game.game_over=False
+                    game.reset()
+                if event.key==pygame.K_LEFT and game.game_over == False:
+                    movimientos-=1
+                    game.move_left()
+                if event.key==pygame.K_RIGHT and game.game_over == False:
+                    movimientos-=1
+                    game.move_right()
+                if event.key==pygame.K_DOWN and game.game_over == False:
+                    game.move_down()
+                    game.update_score(0,1)
+                if event.key==pygame.K_UP and game.game_over == False:
+                    movimientos-=1
+                    game.rotate()
+
+        #Actualizacion del juego
+        if event.type==GAME_UPDATE and game.game_over==False and modo=="tiempo": #La posicion se actualiza solo cuando se dispara
+            tiempo-=1
+            if tiempo==0:
+                game.game_over=True
+                tiempo=60
+            game.move_down()
+        elif event.type==GAME_UPDATE and game.game_over==False and modo=="movimiento":
+            if movimientos==0:
+                game.game_over=True
+                movimientos=20
+            game.move_down()
+            
     tiempo_act=pygame.time.get_ticks()
     if tiempo_act-ultima_frase>=3000:  # 30 segundos
         frase=random_frase()
@@ -109,25 +146,35 @@ while True:
     screen.fill(Colors.d)
 
     #Dibujar cada una de los items de la pantalla
-    f=pygame.font.SysFont("Impact",30)
+    font=pygame.font.SysFont("Impact",30)
     dibujar_texto("Puntaje",Colors.white,555,20)
-    score_value=f.render(str(game.score),True,Colors.white)
+    score_value=font.render(str(game.score),True,Colors.white)
     dibujar_texto("Jose",Colors.white,770,20)
     dibujar_texto("jicandurin",Colors.white,740,60)
     dibujar_texto("Bolivar",Colors.white,760,100)
     dibujar_texto(frase,Colors.white,480,400)  
     dibujar_texto("Siguiente",Colors.white,750,180)
-    dibujar_texto("Tiempo",Colors.white,555,180)
 
-    if game.game_over==True:
-        dibujar_texto("GAME OVER",Colors.red,600,480)    
+    if modo=="tiempo":
+        dibujar_texto("Tiempo",Colors.white,555,180)
+        pygame.draw.rect(screen,Colors.light_blue,mode_rect,0,10)
+        tiempo_value=font.render(str(tiempo),True,Colors.white)
+        screen.blit(tiempo_value,tiempo_value.get_rect(centerx=mode_rect.centerx,centery=mode_rect.centery))
+        if game.game_over:
+            dibujar_texto("GAME OVER",Colors.red,600,480) 
+
+    elif modo=="movimiento":
+        dibujar_texto("Movimiento",Colors.white,550,180)
+        pygame.draw.rect(screen,Colors.light_blue,mode_rect,0,10)
+        movi_value=font.render(str(movimientos),True,Colors.white)
+        screen.blit(movi_value,movi_value.get_rect(centerx=mode_rect.centerx,centery=mode_rect.centery))
+        if game.game_over:
+            dibujar_texto("GAME OVER",Colors.red,600,480) 
+       
     
     pygame.draw.rect(screen,Colors.light_blue,score_rect,0,10) #Dibujar recuadro
     screen.blit(score_value,score_value.get_rect(centerx=score_rect.centerx, centery=score_rect.centery))   
     pygame.draw.rect(screen,Colors.light_blue,next_rect,0,10)
-    pygame.draw.rect(screen,Colors.light_blue,mode_rect,0,10)
-
-
     game.draw(screen)
 
     pygame.display.update() #Actualiza los cambios en los objetos del juego e imprime una imagen de ellos
