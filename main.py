@@ -18,6 +18,14 @@ while flag:
 codigo_juego=000 #Codigo del juego
 time=datetime.now() #Fecha actual
 
+#Variables de control para los modos de juego
+time=60
+movimientos=0
+
+#Inicio del juego
+pygame.init()
+
+
 #Generar las frases de los ODS
 def random_frase():
         frases=["Fin de la pobreza","¡No desperdiciemos la comida!","El ejercicio es clave para la salud","El conocimiento es poder.",
@@ -42,11 +50,6 @@ def registro(codigo,iden,score):
     f.write(cad.encode())
     f.close()
 
-#Inicio del juego
-pygame.init()
-
-tiempo=60
-
 #Fuente del titulo y dibujar el texto en pantalla
 def dibujar_texto(texto,color,x,y):
         fuente=pygame.font.SysFont("Impact",30)
@@ -55,7 +58,8 @@ def dibujar_texto(texto,color,x,y):
 
 #Recuadros para mostrar el puntaje y la pieza siguiente
 score_rect=pygame.Rect(520,80,170,60)
-ods_rect=pygame.Rect(510,215,200,160)
+next_rect=pygame.Rect(740,230,150,130)
+mode_rect=pygame.Rect(535,230,150,130)
 
 #Crear pantalla del juego
 screen=pygame.display.set_mode((950,550))
@@ -66,6 +70,7 @@ pygame.display.set_caption("Epic Tetris")
 #Velocidad del juego
 clock=pygame.time.Clock()
 
+#Iniciar el juego
 game=Game(n)
 
 #Evento para actualizar las posiciones de las piezas
@@ -102,32 +107,27 @@ while True:
     
     #Dibujar la pantalla
     screen.fill(Colors.d)
-    dibujar_texto("Puntaje",Colors.white,550,20)
+
+    #Dibujar cada una de los items de la pantalla
     f=pygame.font.SysFont("Impact",30)
+    dibujar_texto("Puntaje",Colors.white,555,20)
     score_value=f.render(str(game.score),True,Colors.white)
     dibujar_texto("Jose",Colors.white,770,20)
     dibujar_texto("jicandurin",Colors.white,740,60)
     dibujar_texto("Bolivar",Colors.white,760,100)
-    dibujar_texto(frase,Colors.white,480,400)   
+    dibujar_texto(frase,Colors.white,480,400)  
+    dibujar_texto("Siguiente",Colors.white,750,180)
+    dibujar_texto("Tiempo",Colors.white,555,180)
 
     if game.game_over==True:
         dibujar_texto("GAME OVER",Colors.red,600,480)    
     
     pygame.draw.rect(screen,Colors.light_blue,score_rect,0,10) #Dibujar recuadro
     screen.blit(score_value,score_value.get_rect(centerx=score_rect.centerx, centery=score_rect.centery))   
-
-
-    """
-    screen.blit(score_surface,(550,20,50,50)) #Mostrar el texto
-    screen.blit(next_surface, (535,180,50,50))
-
-    if game.game_over==True:
-        screen.blit(game_over_surface,(530,450,50,50))
-
-    pygame.draw.rect(screen,Colors.light_blue,score_rect,0,10) #Dibujar recuadro
-    screen.blit(score_value,score_value.get_rect(centerx=score_rect.centerx, centery=score_rect.centery))
     pygame.draw.rect(screen,Colors.light_blue,next_rect,0,10)
-    """
+    pygame.draw.rect(screen,Colors.light_blue,mode_rect,0,10)
+
+
     game.draw(screen)
 
     pygame.display.update() #Actualiza los cambios en los objetos del juego e imprime una imagen de ellos

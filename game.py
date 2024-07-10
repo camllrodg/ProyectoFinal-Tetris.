@@ -56,7 +56,8 @@ class Game:
             self.grid.grid[position.row][position.column]=self.current_block.id
         self.current_block=self.next_block
         self.next_block=self.get_random_block()
-        self.grid.delete_full_row()
+        rows_clear=self.grid.delete_full_row()
+        self.update_score()
         if self.block_fits()==False:
             self.game_over=True
     
@@ -89,13 +90,19 @@ class Game:
             if self.grid.inside(tile.row,tile.column)==False:
                 return False
         return True
-
     
     #Metodo para dibujar las piezas
     def draw(self,screen):
         self.grid.draw(screen)
         self.current_block.draw(screen,11,11)
-       
+        if self.next_block.id==1:
+            self.next_block.draw(screen,680,250)
+        elif self.next_block.id==2:
+            self.next_block.draw(screen,700,250)
+        elif self.next_block.id==7:
+            self.next_block.draw(screen,660,270)
+        else:
+            self.next_block.draw(screen,680,250)
        
     
 
