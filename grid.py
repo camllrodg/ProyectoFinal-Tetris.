@@ -51,15 +51,15 @@ class Grid:
 
     #Eliminar fila llena
     def delete_full_row(self):
-        full = 0
+        full=0
         valores=[]
-        for row in range(self.num_rows-1, 0, -1):
+        for row in range(self.num_rows-1,0,-1):
             if self.full_row(row):
                 for column in range(self.num_cols):
                     valores.append(self.grid[row][column])
                 self.delete_row(row)
-                full += 1
-            elif full > 0:
+                full+=1
+            elif full>0:
                 self.move_row(row, full)
         return full, valores
 

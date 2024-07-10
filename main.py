@@ -2,10 +2,10 @@ import pygame
 import sys
 import random
 import time
-from time import sleep
 from game import Game
 from colors import Colors
 from datetime import datetime
+from blocks import *
 
 #Solicitar dimensiones de la matriz
 flag=True
@@ -58,6 +58,14 @@ def dibujar_texto(texto,color,x,y):
         text=fuente.render(texto,True,color)
         screen.blit(text,(x,y))
 
+#Piezas Seleccionadas
+block=[block_1(),block_2(),block_3(),block_4(),block_5(),block_6(),block_7(),block_8(),block_9()]
+piezas=[2,3,4,5,7]
+piezas_act=[x-1 for x in piezas]
+pieza=[]
+for i in range (len(piezas_act)):
+    pieza.append(block[piezas_act[i]])
+
 #Recuadros para mostrar el puntaje y la pieza siguiente
 score_rect=pygame.Rect(520,80,170,60)
 next_rect=pygame.Rect(740,230,150,130)
@@ -73,7 +81,7 @@ pygame.display.set_caption("Epic Tetris")
 clock=pygame.time.Clock()
 
 #Iniciar el juego
-game=Game(n)
+game=Game(n,pieza,piezas_act)
 
 #Evento para actualizar las posiciones de las piezas
 GAME_UPDATE=pygame.USEREVENT
@@ -81,6 +89,8 @@ pygame.time.set_timer(GAME_UPDATE,200) #Crea un temporizador que dispara GAME_UP
 
 frase=random_frase()
 ultima_frase=pygame.time.get_ticks()
+ult_tiempo=pygame.time.get_ticks()
+
 while True:
     for event in pygame.event.get(): #Verificar que el evento del ciclo actual no sea salir
         if event.type==pygame.QUIT: #Salir del juego
@@ -94,49 +104,60 @@ while True:
                     codigo_juego+=1
                     registro(codigo_juego,50,game.score)
                     game.game_over=False
-                    game.reset()
+                    game.reset(piezas_act)
                 if event.key==pygame.K_LEFT and game.game_over==False:
                     game.move_left()
                 if event.key==pygame.K_RIGHT and game.game_over==False:
                     game.move_right()
                 if event.key==pygame.K_DOWN and game.game_over==False:
-                    game.move_down()
+                    game.move_down(piezas_act)
                 if event.key==pygame.K_UP and game.game_over==False:
                     game.rotate()
 
-            #Modo de Juegos
+            #Modo de movimientos
             if modo=="movimiento":
                 if game.game_over:
                     codigo_juego+=1
                     registro(codigo_juego,50,game.score)
                     game.game_over=False
-                    game.reset()
+                    game.reset(piezas_act)
                 if event.key==pygame.K_LEFT and game.game_over == False:
-                    movimientos-=1
                     game.move_left()
                 if event.key==pygame.K_RIGHT and game.game_over == False:
-                    movimientos-=1
                     game.move_right()
                 if event.key==pygame.K_DOWN and game.game_over == False:
-                    game.move_down()
-                    game.update_score(0,1)
+                    game.move_dowm(piezas_act,movimientos)
                 if event.key==pygame.K_UP and game.game_over == False:
-                    movimientos-=1
                     game.rotate()
 
         #Actualizacion del juego
         if event.type==GAME_UPDATE and game.game_over==False and modo=="tiempo": #La posicion se actualiza solo cuando se dispara
-            tiempo-=1
+            tiempo_act=pygame.time.get_ticks()
+            if tiempo_act-ult_tiempo>=1000:  # 30 segundos
+                tiempo-=1
+                ult_tiempo=tiempo_act
             if tiempo==0:
                 game.game_over=True
                 tiempo=60
-            game.move_down()
+            game.move_down(piezas_act)
+
         elif event.type==GAME_UPDATE and game.game_over==False and modo=="movimiento":
-            if movimientos==0:
-                game.game_over=True
-                movimientos=20
-            game.move_down()
-            
+            game.move_dowm(piezas_act,movimientos)
+            tiempo_act=pygame.time.get_ticks()
+            if tiempo_act-ult_tiempo>=2500:  # 30 segundos
+                movimientos-=1
+                ult_tiempo=tiempo_act
+            if game.game_over:
+                game.game_over=False
+                movimientos=int(input("Ingrese la cantidad de movimientos: "))
+                game.move_dowm(piezas_act,movimientos)
+
+    if game.game_over and modo=="tiempo":
+        tiempo=60
+
+    if game.game_over and modo=="movimiento":
+        movimientos=20
+
     tiempo_act=pygame.time.get_ticks()
     if tiempo_act-ultima_frase>=3000:  # 30 segundos
         frase=random_frase()
